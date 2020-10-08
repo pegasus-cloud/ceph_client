@@ -19,6 +19,10 @@ type UserInfo struct {
 
 //GetNCHCSecretByAccess ...
 func (c *RGWAdminConfig) GetNCHCSecretByAccess(rgwUID, access string) (*UserInfo, error) {
+	if cacheD, err := c.getCache(rgwUID + access); err == nil {
+		return cacheD.(*UserInfo), nil
+	}
+
 	uiRGW, err := c.GetRGWUser(rgwUID)
 	if err != nil {
 		return nil, err
@@ -61,5 +65,6 @@ func (c *RGWAdminConfig) GetNCHCSecretByAccess(rgwUID, access string) (*UserInfo
 		return nil, errors.New("User or subuser not found")
 	}
 
+	c.putCache(rgwUID+access, userInfo)
 	return userInfo, nil
 }

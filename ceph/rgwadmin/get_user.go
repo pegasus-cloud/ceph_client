@@ -27,6 +27,9 @@ type (
 
 //GetRGWUser ...
 func (s *RGWAdminConfig) GetRGWUser(userID string) (ui *UserInfoRGW, err error) {
+	if cacheD, err := s.getCache(userID); err == nil {
+		return cacheD.(*UserInfoRGW), nil
+	}
 	bodyBytes, _, status, err := s.sendRequestWithAWSV4(
 		"GET",
 		fmt.Sprintf("http://%s/admin/user?uid=%s", s.Host, userID),
@@ -49,6 +52,6 @@ func (s *RGWAdminConfig) GetRGWUser(userID string) (ui *UserInfoRGW, err error) 
 	if e := json.Unmarshal(bodyBytes, bS); e != nil {
 		return nil, e
 	}
-
+	s.putCache(userID, bS)
 	return bS, err
 }
