@@ -1,8 +1,8 @@
-package main
+package ceph
 
 import (
-	"github.com/pegasus-cloud/ceph_client/rados"
-	"github.com/pegasus-cloud/ceph_client/rgwadmin"
+	"github.com/pegasus-cloud/ceph_client/ceph/rados"
+	"github.com/pegasus-cloud/ceph_client/ceph/rgwadmin"
 )
 
 var rgwAdminCfg *rgwadmin.RGWAdminConfig
