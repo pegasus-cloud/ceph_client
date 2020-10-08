@@ -8,6 +8,11 @@ import (
 
 //GetRGWUidByAccess ....
 func (c *RadosCeph) GetRGWUidByAccess(access string) (string, error) {
+
+	if cacheData, err := c.getCache(access); err == nil {
+		return cacheData.(string), nil
+	}
+
 	ioctx, err := c.conn.OpenIOContext(fmt.Sprintf("%s.rgw.meta", c.Region))
 	if err != nil {
 		return "", err
@@ -23,6 +28,8 @@ func (c *RadosCeph) GetRGWUidByAccess(access string) (string, error) {
 	if _, err := ioctx.Read(access, uid, 4); err != nil {
 		return "", err
 	}
+
+	c.putCache(access, utility.BytesToStr(uid))
 
 	return utility.BytesToStr(uid), nil
 }
