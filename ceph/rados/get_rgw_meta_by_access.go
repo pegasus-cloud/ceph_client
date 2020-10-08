@@ -3,7 +3,7 @@ package rados
 import (
 	"fmt"
 
-	"github.com/pegasus-cloud/ceph_client/utility"
+	"github.com/pegasus-cloud/ceph_client/ceph/utility"
 )
 
 //GetRGWUidByAccess ....
