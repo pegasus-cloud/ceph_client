@@ -12,16 +12,13 @@ import (
 	"net/http"
 	"strings"
 	"time"
-
-	"github.com/moul/http2curl"
-	"github.com/spf13/viper"
-	"go.uber.org/zap"
 )
 
 // Testing ...
 var (
-	MockDo func(req *http.Request) (*http.Response, error)
-	IsMock bool
+	MockDo             func(req *http.Request) (*http.Response, error)
+	IsMock             bool
+	HTTPRequestTimeout = time.Duration(5) * time.Second
 )
 
 func do(req *http.Request) (*http.Response, error) {
@@ -52,7 +49,6 @@ func SendRequestWithBasicAuth(method string, url string, headers map[string]stri
 func send(method string, url string, headers map[string]string, body interface{}, withSSL bool, certFile *string, username string, password string) ([]byte, http.Header, int, error) {
 	request, err := bundleRequest(method, url, headers, body)
 	if err != nil {
-		zap.L().Error(err.Error())
 		return nil, nil, -1, err
 	}
 
@@ -63,7 +59,6 @@ func send(method string, url string, headers map[string]string, body interface{}
 	resp, err := bundleClient(request, false, nil)
 
 	if err != nil {
-		zap.L().Error(err.Error())
 		return nil, nil, -1, err
 	}
 
@@ -71,21 +66,10 @@ func send(method string, url string, headers map[string]string, body interface{}
 
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		zap.L().Error(err.Error())
 		return nil, nil, resp.StatusCode, err
 	}
 
 	return b, resp.Header, resp.StatusCode, err
-}
-
-func ToCurl(method string, url string, headers map[string]string, body interface{}) {
-	request, err := bundleRequest(method, url, headers, body)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Println(http2curl.GetCurlCommand(request))
 }
 
 func bundleClient(req *http.Request, withSSL bool, certFile *string) (resp *http.Response, err error) {
@@ -99,11 +83,11 @@ func bundleClient(req *http.Request, withSSL bool, certFile *string) (resp *http
 		}
 		client = &http.Client{
 			Transport: trans,
-			Timeout:   time.Duration(viper.GetInt("triton.request_timeout")) * time.Second,
+			Timeout:   HTTPRequestTimeout,
 		}
 	} else {
 		client = &http.Client{
-			Timeout: time.Duration(viper.GetInt("triton.request_timeout")) * time.Second,
+			Timeout: HTTPRequestTimeout,
 		}
 	}
 
