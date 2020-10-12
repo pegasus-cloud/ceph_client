@@ -12,8 +12,6 @@ import (
 	"net/http"
 	"strings"
 	"time"
-
-	"go.uber.org/zap"
 )
 
 // Testing ...
@@ -51,7 +49,6 @@ func SendRequestWithBasicAuth(method string, url string, headers map[string]stri
 func send(method string, url string, headers map[string]string, body interface{}, withSSL bool, certFile *string, username string, password string) ([]byte, http.Header, int, error) {
 	request, err := bundleRequest(method, url, headers, body)
 	if err != nil {
-		zap.L().Error(err.Error())
 		return nil, nil, -1, err
 	}
 
@@ -62,7 +59,6 @@ func send(method string, url string, headers map[string]string, body interface{}
 	resp, err := bundleClient(request, false, nil)
 
 	if err != nil {
-		zap.L().Error(err.Error())
 		return nil, nil, -1, err
 	}
 
@@ -70,7 +66,6 @@ func send(method string, url string, headers map[string]string, body interface{}
 
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		zap.L().Error(err.Error())
 		return nil, nil, resp.StatusCode, err
 	}
 
