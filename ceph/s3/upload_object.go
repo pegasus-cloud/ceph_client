@@ -16,7 +16,7 @@ func (s *S3Config) UploadObject(object string, fileReader io.ReadSeeker) (*http.
 	if err != nil {
 		return res, err
 	}
-	if res.StatusCode != 200 {
+	if res.StatusCode != http.StatusOK {
 		defer res.Body.Close()
 		body := S3Error{}
 		bodyBytes, _ := ioutil.ReadAll(res.Body)

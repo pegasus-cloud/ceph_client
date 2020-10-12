@@ -8,7 +8,6 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	v4 "github.com/aws/aws-sdk-go/aws/signer/v4"
-	// "github.com/spf13/viper"
 )
 
 //S3Config ...
@@ -20,6 +19,7 @@ type S3Config struct {
 	AdminSecretKey string
 	Region         string
 	Bucket         string
+	Timeout        time.Duration
 }
 
 //S3Error ...

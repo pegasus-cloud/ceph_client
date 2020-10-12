@@ -21,6 +21,7 @@ type RGWAdminConfig struct {
 	Region      string
 	CacheSize   int
 	CacheExpire time.Duration
+	Timeout     time.Duration
 	_           struct{}
 }
 
@@ -38,25 +39,28 @@ func (s *RGWAdminConfig) sendRequestWithAWSV4(method, url string, header map[str
 	for key, value := range req.Header {
 		signatureHeader[key] = value[0]
 	}
-
+	if s.Timeout != 0 {
+		utility.HTTPRequestTimeout = s.Timeout
+	}
 	return utility.SendRequest(method, url, signatureHeader, body)
 }
 
 func (r *RGWAdminConfig) getCache(key string) (interface{}, error) {
-	if c := r.checkCache(); c == nil {
+	c := r.checkCache()
+	if c == nil {
 		return nil, errors.New("Cache Not Enable")
-	} else {
-		return c.Get(key)
 	}
+	return c.Get(key)
 
 }
 
 func (r *RGWAdminConfig) putCache(key string, d interface{}) error {
-	if c := r.checkCache(); c == nil {
+	c := r.checkCache()
+	if c == nil {
 		return errors.New("Cache Not Enable")
-	} else {
-		return c.Set(key, d)
 	}
+	return c.Set(key, d)
+
 }
 
 func (r *RGWAdminConfig) checkCache() gcache.Cache {

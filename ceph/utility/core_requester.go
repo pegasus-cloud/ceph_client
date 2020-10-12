@@ -13,15 +13,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/moul/http2curl"
-	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
 
 // Testing ...
 var (
-	MockDo func(req *http.Request) (*http.Response, error)
-	IsMock bool
+	MockDo             func(req *http.Request) (*http.Response, error)
+	IsMock             bool
+	HTTPRequestTimeout = time.Duration(5) * time.Second
 )
 
 func do(req *http.Request) (*http.Response, error) {
@@ -78,16 +77,6 @@ func send(method string, url string, headers map[string]string, body interface{}
 	return b, resp.Header, resp.StatusCode, err
 }
 
-func ToCurl(method string, url string, headers map[string]string, body interface{}) {
-	request, err := bundleRequest(method, url, headers, body)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Println(http2curl.GetCurlCommand(request))
-}
-
 func bundleClient(req *http.Request, withSSL bool, certFile *string) (resp *http.Response, err error) {
 	var client *http.Client
 	if withSSL {
@@ -99,11 +88,11 @@ func bundleClient(req *http.Request, withSSL bool, certFile *string) (resp *http
 		}
 		client = &http.Client{
 			Transport: trans,
-			Timeout:   time.Duration(viper.GetInt("triton.request_timeout")) * time.Second,
+			Timeout:   HTTPRequestTimeout,
 		}
 	} else {
 		client = &http.Client{
-			Timeout: time.Duration(viper.GetInt("triton.request_timeout")) * time.Second,
+			Timeout: HTTPRequestTimeout,
 		}
 	}
 

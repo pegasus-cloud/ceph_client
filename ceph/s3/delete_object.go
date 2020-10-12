@@ -15,7 +15,7 @@ func (s *S3Config) DeleteObject(object string) (*http.Response, error) {
 	if err != nil {
 		return res, err
 	}
-	if res.StatusCode != 204 {
+	if res.StatusCode != http.StatusNoContent {
 		defer res.Body.Close()
 		body := S3Error{}
 		bodyBytes, _ := ioutil.ReadAll(res.Body)
