@@ -12,8 +12,7 @@ import (
 
 //S3Config ...
 type S3Config struct {
-	Host string
-	// Body           io.ReadSeeker
+	Host           string
 	Header         map[string]string
 	AdminAccessKey string
 	AdminSecretKey string

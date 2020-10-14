@@ -3,6 +3,7 @@ package s3
 import (
 	"encoding/xml"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 
@@ -10,8 +11,8 @@ import (
 )
 
 //CompleteUploadObject ...
-func (s *S3Config) CompleteUploadObject(object, uploadID string) (*http.Response, error) {
-	res, err := s.Send(http.MethodPost, fmt.Sprintf("%s/%s?uploadId=%s", s.Bucket, object, uploadID))
+func (s *S3Config) CompleteUploadObject(object, uploadID string, body io.ReadSeeker) (*http.Response, error) {
+	res, err := s.Send(http.MethodPost, fmt.Sprintf("%s/%s?uploadId=%s", s.Bucket, object, uploadID), body)
 	if err != nil {
 		return res, err
 	}
