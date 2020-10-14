@@ -51,6 +51,7 @@ func (c *RGWAdminConfig) GetNCHCSecretByAccess(rgwUID, access string) (*UserInfo
 	for _, key := range uiRGW.Keys {
 		if uiRGW.UserID == key.ID[:len(uiRGW.UserID)] && key.Access == access {
 			userInfo.UserID = key.ID[len(uiRGW.UserID)+1:]
+			userInfo.Access = key.Access
 			userInfo.Secret = key.Secret
 			break
 		}
