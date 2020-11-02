@@ -42,6 +42,11 @@ func Rados() *rados.RadosCeph {
 
 // Mixed functions
 
+//GetHealth ...
+func GetHealth() (string, error) {
+	return Rados().GetHealth()
+}
+
 // GetNCHCSecret ...
 func GetNCHCSecret(access string) (*rgwadmin.UserInfo, error) {
 	rgwUID, err := Rados().GetRGWUidByAccess(access)
