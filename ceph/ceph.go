@@ -22,9 +22,9 @@ func GetRGWUser(userID string) (ui *rgwadmin.UserInfoRGW, err error) {
 	return rgwAdminCfg.GetRGWUser(userID)
 }
 
-//GetNCHCSecretByAccess ...
-func GetNCHCSecretByAccess(rgwUID, access string) (*rgwadmin.UserInfo, error) {
-	return rgwAdminCfg.GetNCHCSecretByAccess(rgwUID, access)
+//GetSecretByAccess2 ...
+func GetSecretByAccess2(rgwUID, access string) (*rgwadmin.UserInfo, error) {
+	return rgwAdminCfg.GetSecretByAccess2(rgwUID, access)
 }
 
 var radosCeph *rados.RadosCeph
@@ -47,14 +47,14 @@ func GetHealth() (string, error) {
 	return Rados().GetHealth()
 }
 
-// GetNCHCSecret ...
-func GetNCHCSecret(access string) (*rgwadmin.UserInfo, error) {
+// GetSecret2 ...
+func GetSecret2(access string) (*rgwadmin.UserInfo, error) {
 	rgwUID, err := Rados().GetRGWUidByAccess(access)
 	if err != nil {
 		return nil, err
 	}
 
-	uInfo, err := GetNCHCSecretByAccess(rgwUID, access)
+	uInfo, err := GetSecretByAccess2(rgwUID, access)
 	if err != nil {
 		return nil, err
 	}
