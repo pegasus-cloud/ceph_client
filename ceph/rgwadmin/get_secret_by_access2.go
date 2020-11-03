@@ -17,8 +17,8 @@ type UserInfo struct {
 	IsPrivate bool
 }
 
-//GetNCHCSecretByAccess ...
-func (c *RGWAdminConfig) GetNCHCSecretByAccess(rgwUID, access string) (*UserInfo, error) {
+//GetSecretByAccess2 ...
+func (c *RGWAdminConfig) GetSecretByAccess2(rgwUID, access string) (*UserInfo, error) {
 	if cacheD, err := c.getCache(rgwUID + access); err == nil {
 		return cacheD.(*UserInfo), nil
 	}
